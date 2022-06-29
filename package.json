@@ -1,0 +1,23 @@
+{
+  "name": "vello",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js.js",
+  "scripts": {
+    "serve": "cd ui & npm run build & cd .. & node main.js",
+    "devStart": "nodemon server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@vue/composition-api": "^1.4.6",
+    "axios": "^0.27.2",
+    "bcrypt": "^5.0.1",
+    "cors": "^2.8.5",
+    "express": "^4.17.2",
+    "nano": "^9.0.5",
+    "nodemon": "^2.0.15",
+    "request": "^2.88.2"
+  }
+}
