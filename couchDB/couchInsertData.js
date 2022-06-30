@@ -7,11 +7,11 @@ const dbInsert = {
     insertedData(
         {
             _id = "1",
-            email = "dvdlaan@yahoo.com",
-            password = "Patoduck2804",
+            email = "model@model.com",
+            password = "VerySecrte",
             auth = false,
             dbName = "users",
-            username = "dvdlaan",
+            username = "Patito",
         } = {}
     ){ 
         this.dbNames = dbName;

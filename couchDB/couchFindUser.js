@@ -55,10 +55,10 @@ const findUser = {
             errorType: error
         }
     },
-    async findUserForLogin(requestedUsername){
+    async findUserForLogin(requestedEmail){
         return await this.db.use(this.dbName).find({
             selector: {
-                username : requestedUsername
+                email : requestedEmail
             }
         }).then(
             res => res.docs

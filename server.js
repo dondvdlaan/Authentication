@@ -57,25 +57,26 @@ server.post("/signup", function (req, res){
 
 // User registration
 server.post("/userRegister", async(req,res) =>{
+  console.log("userRegister: ", req.body)
   try{
     //create Salt for the Password 
-    const username = req.body.account["Benutzername"]
-    const hashedPassword = await bcrypt.hash(req.body.account["Passwort"],10)
+    const username = req.body.account["userName"]
+    const hashedPassword = await bcrypt.hash(req.body.account["password"],10)
 
-    let email = req.body.account["E-Mail"]
+    let email = req.body.account["email"]
 
-     { //send mail / blocked by alfatraining so i cant use this
+     { //send mail / blocked by the time of developping, not used
   /*     var transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-          user: 'alfakingzlingott@gmail.com',
-          pass: 'sdagzfdababgaupmpo'
+          user: 'xx@gmail.com',
+          pass: 'yy'
         }
       });
       
       var mailOptions = {
-        from: 'alfakingzlingott@gmail.com',
-        to: 'janlingott@yahoo.com',
+        from: 'yy@gmail.com',
+        to: 'zz@yahoo.com',
         subject: 'Sending Email using Node.js',
         text: 'That was easy!'
       };
@@ -120,14 +121,12 @@ server.post("/userLogin",(req,res) =>{
 
   try{
     //create Salt for the Password 
-    const username = req.body.account["Benutzername"]
-    const password = req.body.account["Passwort"]
+    const email = req.body.account["email"]
+    const password = req.body.account["password"]
     let id = ""
     let rev = ""
 
-    let email = req.body.account["E-Mail"]
-
-    findUser.findUserForLogin(username).then(async value =>{
+    findUser.findUserForLogin(email).then(async value =>{
       console.log("res from login ",value)
       if(!value.length<1){
         id = value[0]._id
@@ -178,7 +177,7 @@ server.post("/getUserData",async (req,res) =>{
 
 // Initialisation
 const init = ()=>{
-  //erstellt die benötigten Tabellen der datenbank
+  // Initialises database
     dbCreate.create();
 }
 

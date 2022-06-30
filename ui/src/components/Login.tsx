@@ -1,20 +1,9 @@
 import { Dispatch, SetStateAction, useState } from "react";
-import { Api } from "../shared/API";
+import { tokenApi } from "../shared/API";
 
 interface Props{
   setToken: Dispatch<SetStateAction<undefined>>
 }
-
-async function loginUser(credentials: any) {
-  return fetch('http://localhost:2500/userLogin', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(credentials)
-  })
-    .then(data => data.json())
- }
 
 export const Login = (props: Props) =>{
   // Constants and variables
@@ -22,20 +11,20 @@ export const Login = (props: Props) =>{
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  // Eventhandlers
+   // Eventhandlers
   const onLogin = (e: React.FormEvent) => {
     // Prevent from refreshing
     e.preventDefault();
 
     let data = {
+      account: {
         email,
         password
-      }
+      }}
       
-      // let reply = Api("post", "userLogin", data)
-      // console.log("Apireply: ", reply)
-    loginUser(data)
-    .then(res => console.log("Apireply:",res))
+      tokenApi("post", "/userLogin", data)
+      .then((resp: any)=>props.setToken(resp.data["login"]))
+
   }
 
     return(
@@ -54,9 +43,9 @@ export const Login = (props: Props) =>{
               className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
               id="id1"
               placeholder="Email address"
-              value={password}
+              value={email}
               onChange={(e) => {
-                setPassword(e.target.value);
+                setEmail(e.target.value);
               }}
             />
           </div>
@@ -68,7 +57,7 @@ export const Login = (props: Props) =>{
               id="id2"
               placeholder="Password"
               onChange={(e) => {
-                setEmail(e.target.value);
+                setPassword(e.target.value);
               }}
             />
           </div>

@@ -3,6 +3,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { Login } from './Login';
 import { Dashboard } from './Dashboard';
 import { Application } from './Application';
+import { Registration } from './Registration';
 
 
 function App() {
@@ -18,6 +19,8 @@ function App() {
     <Routes>
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/application" element={<Application />} />
+      <Route path="/registration" element={<Registration />} />
+
 
       <Route path="/"  element={<Navigate to="/dashboard" />} />
     </Routes>
