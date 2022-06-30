@@ -31,6 +31,7 @@ export const Login = (props: Props) =>{
 
 <section className="h-screen bg-yellow-50">
   <div className="px-6 h-full text-gray-800">
+    <h1 className="text-5xl text-center pt-3">REACT AUTHENTICATION</h1>
     <div className="flex xl:justify-center lg:justify-between justify-center items-center flex-wrap h-full g-6" >
       <div className="xl:ml-20 xl:w-5/12 lg:w-5/12 md:w-8/12 mb-12 md:mb-0">
         <form
