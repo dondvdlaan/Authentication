@@ -1,28 +1,28 @@
-// Imports
-const express = require('express')
-const cors = require('cors')
+// ***************** Imports *****************
+const express = require('express');
+const cors    = require('cors');
 const request = require("request");
-const bcrypt = require("bcrypt")
+const bcrypt  = require("bcrypt");
 
-// Constanten and variables
+// ***************** Constanten and variables *****************
 //DB functions
-const dbCreate = require("./couchDB/couchCreateTables.js")
-const dbInsert = require("./couchDB/couchInsertData.js")
-const findUser = require("./couchDB/couchFindUser.js")
-const getUserData = require("./couchDB/couchGetUserData.js")
+const dbCreate    = require("./couchDB/couchCreateTables.js");
+const dbInsert    = require("./couchDB/couchInsertData.js");
+const findUser    = require("./couchDB/couchFindUser.js");
+const getUserData = require("./couchDB/couchGetUserData.js");
 
-const server = express()
-const port = 2500;
+const server      = express()
+const port        = 2500;
 
-// Middleware
+// ***************** Middleware *****************
 // handshake, everybody will be responded
 server.use(cors());
 // ???
 server.use('/app', express.static(__dirname + '/ui/dist'));
 server.use(express.json())
 
-// Routes
-//Handles the Captcha returns a res when Google thinks you are human
+// ***************** Routes *****************
+// Handles the Captcha returns a res when Google thinks you are human
 server.post("/signup", function (req, res){
 
   if (!req.body.recaptchaToken) {
@@ -128,11 +128,13 @@ server.post("/userLogin",(req,res) =>{
 
     findUser.findUserForLogin(email).then(async value =>{
       console.log("res from login ",value)
-      if(!value.length<1){
+
+      if(!value.length < 1){
         id = value[0]._id
         rev = value[0]._rev
         console.log(password)
         console.log(value[0].password)
+
         if(await bcrypt.compare(password,value[0].password)){
           console.log("password is correct login")
           
@@ -144,13 +146,13 @@ server.post("/userLogin",(req,res) =>{
         }
         else{
           res.json({
-            errors: ["4"]
+            errors: ["Login incorrect"]
           })
         }
       }
       else{
         res.json({
-          errors: ["4"]
+          errors: ["Login incorrect"]
         })
       }
 

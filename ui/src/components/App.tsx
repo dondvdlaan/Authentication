@@ -11,6 +11,8 @@ function App() {
     // HOOKS
     const [token, setToken] = useState();
 
+    console.log("token: ", token);
+    
     // Waiting for login token
     if(!token) return <Login setToken={setToken} />;
 

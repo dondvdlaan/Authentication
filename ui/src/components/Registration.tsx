@@ -4,6 +4,7 @@ import { tokenApi } from "../shared/API"
 
 export const Registration = () =>{
 
+    // This component to mock DB with test user
     const data = {
         account:{
             userName: "Patito",
@@ -13,6 +14,12 @@ export const Registration = () =>{
     }
 
     tokenApi("post","/userRegister",data)
+    .then((err: any, res: any) => 
+    {
+        if(err) console.log(err);
+        else console.log(res);
+    }
+    )
     
     return(
 

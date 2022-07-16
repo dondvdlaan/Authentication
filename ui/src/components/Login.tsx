@@ -6,12 +6,13 @@ interface Props{
 }
 
 export const Login = (props: Props) =>{
-  // Constants and variables
+  // ********** Constants and variables **********
   // Hooks
-  const [email, setEmail] = useState("");
+  const [email, setEmail]       = useState("");
   const [password, setPassword] = useState("");
+  const [loginErr, setLoginErr] = useState("");
 
-   // Eventhandlers
+   // ********** Eventhandlers **********
   const onLogin = (e: React.FormEvent) => {
     // Prevent from refreshing
     e.preventDefault();
@@ -21,12 +22,25 @@ export const Login = (props: Props) =>{
         email,
         password
       }}
-      
+      // Check user input against DB
       tokenApi("post", "/userLogin", data)
-      .then((resp: any)=>props.setToken(resp.data["login"]))
+      .then((resp: any)=>
+      {
+        if(resp.data.errors) setLoginErr(resp.data.errors[0]);
+        
+        else if(resp.data.login)
+        {
+          // Create the localStorage for the user
+          localStorage.userId = resp.data.userId;
+          localStorage.userRev = resp.data.userRev;
+          localStorage.loggedIn = true;
 
+          // Respond to setToken in app.tsx
+          props.setToken(resp.data["login"])
+        }
+      }
+      )
   }
-
     return(
 
 <section className="h-screen bg-yellow-50">
@@ -37,6 +51,10 @@ export const Login = (props: Props) =>{
         <form
         onSubmit={onLogin}
         >
+         {/* Login error message */}
+         <div className="mb-6 text-red-700 " role="alert">
+          {loginErr}
+         </div >
          {/* Email input */}
           <div className="mb-6">
             <input
