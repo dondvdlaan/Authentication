@@ -14,6 +14,8 @@ const getUserData = require("./couchDB/couchGetUserData.js");
 const server      = express()
 const port        = 2500;
 
+const ERROR_LOGIN = 4;
+
 // ***************** Middleware *****************
 // handshake, everybody will be responded
 server.use(cors());
@@ -25,6 +27,8 @@ server.use(express.json())
 // Handles the Captcha returns a res when Google thinks you are human
 server.post("/signup", function (req, res){
 
+  console.log("signup received", req.body)
+
   if (!req.body.recaptchaToken) {
       return res.status(400).json({message: "recaptchaToken is required"});
   }
@@ -33,7 +37,7 @@ server.post("/signup", function (req, res){
       json: true,
       form: {
           //replace it with .env before publishing
-          secret: "6LfZVH0eAAAAAPtsI_qPZn9i903Rv3nK3RluXYLa",
+          secret: "6LeCsv4gAAAAAKs1nWxIZfP6aSXNC46syPOzl9yX",
           response: req.body.recaptchaToken
       }
   };
@@ -41,10 +45,12 @@ server.post("/signup", function (req, res){
   //send request to the google server
   request.post(verifyCaptchaOptions, function (err, response, body) {
           if (err) {
+            console.log("google server err")
               return res.status(500).json({message: "oops, something went wrong on our side"});
           }
 
           if (!body.success) {
+            console.log("google server no succes", {message: body["error-codes"].join(".")})
               return res.status(500).json({message: body["error-codes"].join(".")});
           }
 
@@ -104,7 +110,7 @@ server.post("/userRegister", async(req,res) =>{
           inserted: true,
         });
       }else{
-        console.log("didnt create account")
+        console.log("No Account created!")
           res.json({
             errors: value.errorType
           });
@@ -146,13 +152,13 @@ server.post("/userLogin",(req,res) =>{
         }
         else{
           res.json({
-            errors: ["Login incorrect"]
+            errors: [ERROR_LOGIN]
           })
         }
       }
       else{
         res.json({
-          errors: ["Login incorrect"]
+          errors: [ERROR_LOGIN]
         })
       }
 

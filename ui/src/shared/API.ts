@@ -8,7 +8,9 @@ export const baseUrl = "http://localhost:2500";
 type SetState<T> = Dispatch<SetStateAction<T>>;
 
 export function tokenApi<T>(method: Method, path: string,  data = {}): any{
-return(
+
+  console.log("tokenAPI > method", method,"url",baseUrl,"path", path, "data", data);
+  return(
     axios({
       method,
       url: `${baseUrl}${path}`,

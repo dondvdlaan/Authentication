@@ -1,18 +1,47 @@
 import { Dispatch, SetStateAction, useState } from "react";
-import { tokenApi } from "../shared/API";
+import { tokenApi } from "../../shared/API";
+import { ErrorText } from "../../shared/ErrorText";
 
 interface Props{
   setToken: Dispatch<SetStateAction<undefined>>
+  isRegister?: boolean
 }
 
+
+// ****************** Main ****************** 
 export const Login = (props: Props) =>{
+
   // ********** Constants and variables **********
+
   // Hooks
   const [email, setEmail]       = useState("");
   const [password, setPassword] = useState("");
-  const [loginErr, setLoginErr] = useState("");
-
-   // ********** Eventhandlers **********
+  const [loginErr, setLoginErr] = useState(0);
+  
+  
+  // ****************** Functions ****************** 
+  const userLogin = (data: any) =>{
+    
+    // Check user input against DB
+    tokenApi("post", "/userLogin", data)
+    .then((resp: any)=>
+    {
+      if(resp.data.errors) setLoginErr(resp.data.errors[0]);
+      
+      else if(resp.data.login)
+      {
+        // Create the localStorage for the user
+        localStorage.userId = resp.data.userId;
+        localStorage.userRev = resp.data.userRev;
+        localStorage.loggedIn = true;
+    
+        // Respond to setToken in requesting page
+        props.setToken(resp.data["login"])
+      }
+    }
+    )
+  }
+   // ****************** Eventhandlers ******************
   const onLogin = (e: React.FormEvent) => {
     // Prevent from refreshing
     e.preventDefault();
@@ -22,26 +51,11 @@ export const Login = (props: Props) =>{
         email,
         password
       }}
-      // Check user input against DB
-      tokenApi("post", "/userLogin", data)
-      .then((resp: any)=>
-      {
-        if(resp.data.errors) setLoginErr(resp.data.errors[0]);
-        
-        else if(resp.data.login)
-        {
-          // Create the localStorage for the user
-          localStorage.userId = resp.data.userId;
-          localStorage.userRev = resp.data.userRev;
-          localStorage.loggedIn = true;
+    
+    userLogin(data);
+}
 
-          // Respond to setToken in app.tsx
-          props.setToken(resp.data["login"])
-        }
-      }
-      )
-  }
-    return(
+return(
 
 <section className="h-screen bg-yellow-50">
   <div className="px-6 h-full text-gray-800">
@@ -52,9 +66,8 @@ export const Login = (props: Props) =>{
         onSubmit={onLogin}
         >
          {/* Login error message */}
-         <div className="mb-6 text-red-700 " role="alert">
-          {loginErr}
-         </div >
+         <ErrorText error = {loginErr} />
+         
          {/* Email input */}
           <div className="mb-6">
             <input
@@ -103,13 +116,13 @@ export const Login = (props: Props) =>{
             >
               Login
             </button>
-            {/* <p className="text-sm font-semibold mt-2 pt-1 mb-0">
+            <p className="text-sm font-semibold mt-2 pt-1 mb-0">
               Don't have an account?
               <a
-                href="#!"
-                className="text-red-600 hover:text-red-700 focus:text-red-700 transition duration-200 ease-in-out"
-                >Register</a >
-            </p> */}
+                href="createAccount"
+                className="text-green-600 hover:text-red-700 focus:text-red-700 transition duration-200 ease-in-out"
+                > Register</a >
+            </p>
           </div>
         </form>
       </div>

@@ -35,21 +35,21 @@ const findUser = {
         ).catch(
             console.log
         )
-        await this.db.use(this.dbName).find({
-            selector: {
-                username : requestedUsername
-            }
-        }).then(
-            res => res.docs
-        ).then(
-            res => {
-                if(!res.length<1)error.push(2)
+        // await this.db.use(this.dbName).find({
+        //     selector: {
+        //         username : requestedUsername
+        //     }
+        // }).then(
+        //     res => res.docs
+        // ).then(
+        //     res => {
+        //         if(!res.length<1)error.push(2)
 
-                existingAccounts += res.length
-            }
-        ).catch(
-            console.log
-        )
+        //         existingAccounts += res.length
+        //     }
+        // ).catch(
+        //     console.log
+        // )
         return { 
             accountExist: (existingAccounts<1),
             errorType: error
