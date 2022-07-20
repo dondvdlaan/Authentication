@@ -11,8 +11,8 @@ Summary:
 - Nodejs server, enter "node server.js" in root
 - CouchDB for users data storage, starts automatically at localhost:5984
 - Authentication by Google Captcha
+- User Authentication by email (not finished)
 
 TODOS:
-- User Authentication by email
 - User "Password forgotten?"
 

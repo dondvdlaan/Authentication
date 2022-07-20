@@ -20,6 +20,8 @@ const REGISTRATION_SUCCESFUL  = "Registration was succesful. Pls login."
 // For reset purpose of Recaptcha
 let captcha: any;
 
+console.log("ENV:",process.env.REACT_APP_SITE_KEY)
+
 // Hooks
 const [email, setEmail]       = useState(props.email);
 const [password, setPassword] = useState(props.password);
@@ -141,9 +143,11 @@ return(
              <ReCAPTCHA
                 className="inline-block px-7 py-3 bg-blue-600 text-white font-medium text-sm l"
 
-                ref={(r) => setCaptchaRef(r) }
-                sitekey = {"6LeCsv4gAAAAAFs24JlNgDut3AOyWGySAG1JSleR"}
-                onChange={onRecaptcha}
+                ref       = {(r) => setCaptchaRef(r) }
+                // sitekey   = {"6LeCsv4gAAAAAFs24JlNgDut3AOyWGySAG1JSleR"}
+                sitekey   = {process.env.REACT_APP_SITE_KEY !== undefined ? process.env.REACT_APP_SITE_KEY : "" }
+
+                onChange  = {onRecaptcha}
                 />
           </div>
           <div className="text-center lg:text-left">

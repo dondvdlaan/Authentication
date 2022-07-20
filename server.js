@@ -1,8 +1,11 @@
+"use strict";
 // ***************** Imports *****************
-const express = require('express');
-const cors    = require('cors');
-const request = require("request");
-const bcrypt  = require("bcrypt");
+const express     = require('express');
+const cors        = require('cors');
+const request     = require("request");
+const bcrypt      = require("bcrypt");
+const nodemailer  = require("nodemailer");
+require('dotenv').config();
 
 // ***************** Constanten and variables *****************
 //DB functions
@@ -36,13 +39,12 @@ server.post("/signup", function (req, res){
       uri: "https://www.google.com/recaptcha/api/siteverify",
       json: true,
       form: {
-          //replace it with .env before publishing
-          secret: "6LeCsv4gAAAAAKs1nWxIZfP6aSXNC46syPOzl9yX",
+          secret: process.env.REACT_APP_SECRET_KEY,
           response: req.body.recaptchaToken
       }
   };
 
-  //send request to the google server
+  // send request to the google server
   request.post(verifyCaptchaOptions, function (err, response, body) {
           if (err) {
             console.log("google server err")
@@ -62,54 +64,69 @@ server.post("/signup", function (req, res){
 })
 
 // User registration
-server.post("/userRegister", async(req,res) =>{
+server.post("/userRegister", async(req,res) =>
+{
   console.log("userRegister: ", req.body)
-  try{
+
+  try
+  {
     //create Salt for the Password 
-    const username = req.body.account["userName"]
-    const hashedPassword = await bcrypt.hash(req.body.account["password"],10)
+    const username        = req.body.account["userName"];
+    const hashedPassword  = await bcrypt.hash(req.body.account["password"],10);
+    const email           = req.body.account["email"];
+    const emailVerify     = process.env.REACT_APP_EMAIL_VERIFY;
+    const token           = process.env.REACT_APP_TOKEN;
 
-    let email = req.body.account["email"]
-
-     { //send mail / blocked by the time of developping, not used
-  /*     var transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: 'xx@gmail.com',
-          pass: 'yy'
+      //send mail / blocked by the time of developping, not used
+      let transporter = nodemailer.createTransport
+      ({
+        service: 'zoho',
+        auth: 
+        {
+          user: process.env.REACT_APP_EMAIL,
+          pass: process.env.REACT_APP_EMAIL_PASS
         }
       });
       
-      var mailOptions = {
-        from: 'yy@gmail.com',
-        to: 'zz@yahoo.com',
-        subject: 'Sending Email using Node.js',
-        text: 'That was easy!'
-      };
+      let mailOptions = 
+      {
+        from    : 'dvdlaan@zohomail.com',
+        to      : emailVerify,
+        subject : 'Account Verification Link', 
+        text    : 'Hello '+ emailVerify +',\n\n' + 
+                  'Please verify your account by clicking the link: \nhttp:\/\/' + 
+                  req.headers.host + 
+                  '\/confirmation\/' + 
+                  emailVerify + '\/' + token + '\n\nThank You!\n' 
+      }
       
       transporter.sendMail(mailOptions, function(error, info){
         if (error) {
-          console.log(error);
+          console.log("sendMail error", error);
         } else {
           console.log('Email sent: ' + info.response);
         }
-      }); */
-    }
-    //value.accountExist will be true if no account was found
-    findUser.doesExist(email,username).then(value =>{
-      if(value.accountExist){
-        console.log("account angelegt")
+      }); 
+  
+    // value.accountExist will be true, if account is not found
+    findUser.doesExist(email,username).then(value =>
+    {
+      if(value.accountExist)
+      {
+        console.log("Account created")
+        
         dbInsert.insertedData({
-          username : username,
-          email : email,
-          password : hashedPassword,
-          auth : false,
-          dbName : "users",
+          username  : username,
+          email     : email,
+          password  : hashedPassword,
+          auth      : false,
+          dbName    : "users",
         })
         res.json({
           inserted: true,
         });
-      }else{
+      }else
+      {
         console.log("No Account created!")
           res.json({
             errors: value.errorType
@@ -120,6 +137,14 @@ server.post("/userRegister", async(req,res) =>{
     console.log("Encypt error: ",e)
   }
 })
+// Function to confirm email verification
+const confirmEmail = (req) =>{
+console.log("Verification token: ", req.params.token)
+}
+
+// Get User Verification email
+server.get('/confirmation/:email/:token', req => confirmEmail(req))
+
 
 // User login
 server.post("/userLogin",(req,res) =>{
