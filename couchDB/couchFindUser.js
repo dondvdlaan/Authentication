@@ -1,7 +1,7 @@
 'use strict';
 const findUser = {
-    db: require("./couch.js"),
-    dbName: "users",
+    db      : require("./couch.js"),
+    dbName  : "users",
     findUser(requestedMail){
         this.db.use(this.dbName).find({
             selector: {

@@ -1,10 +1,11 @@
 "use strict"
 const dbCreate = {
-    db: require("./couch.js"),
-    dbNames: ["users"],
+    db      : require("./couch.js"),
+    dbNames : ["users"],
 
     create(){
         this.dbNames.forEach(table => {
+            // console.log("table:", table);
             this.db.list().then(
                 res => {
                     if(res.includes(table)){

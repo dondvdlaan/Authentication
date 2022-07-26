@@ -1,7 +1,7 @@
 'use strict';
 const getUserData = {
-    db: require("./couch.js"),
-    dbName: "users",
+    db      : require("./couch.js"),
+    dbName  : "users",
     getUser(id,rev){
         return this.db.use(this.dbName).find({
             selector: {

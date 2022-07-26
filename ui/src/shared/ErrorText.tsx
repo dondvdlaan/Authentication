@@ -11,7 +11,9 @@ export const ErrorText = (props: Props) =>{
   const errorText= ["Ein User mit dieser E-Mail existiert bereits!",
                     "Ein User mit diesem Benutzernamen exisitert bereits!",
                     "Die Passwörter stimmen nicht überein",
-                    "Benutezrname oder Passwort ungültig"]
+                    "Benutezrname oder Passwort ungültig",
+                    "Account not activated"
+                  ]
   
   // Hooks
   
